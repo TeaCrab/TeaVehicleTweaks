@@ -31,6 +31,16 @@ GetDModel = function(vrec, vtype)
   return MD.DriveModel[vtype](vrec)
 end
 
+GetDModelTable = function(DModel)
+  return {
+    DModel:AirResistanceFactor(),
+    DModel:BodyFriction(),
+    DModel:Chassis_mass(),
+    DModel:Total_mass(),
+    DModel:Center_of_mass_offset(),
+  }
+end
+
 CloneEngine = function(vrec)
   -- Clone a new Engine based on Vehicle Record
   local Engine = GetEngine(vrec)
@@ -186,8 +196,11 @@ Func.PrintCurrentEngine = function()
   local VREC = TweakDB:GetRecord(DS.input)
   local VType = GetType(VREC)
   if VType == '' then print("Invalid Vehicle Type") return end
+  local DModel = GetDModel(VREC, VType)
+  if DModel==nil then print("Invalid Vehicle DriveModel") return end
   local Engine = GetEngine(VREC)
   if Engine==nil then print("Invalid Vehicle Engine") return end
+  print(TL.Lay(GetDModelTable(DModel)))
   print(VType .. ' - ' .. ID(Engine) .. ' - ' .. Engine:EngineMaxTorque())
   print(GetFinalGear(Engine).id)
   PrintGearTable(GetGearTable(Engine))
@@ -197,10 +210,14 @@ Func.PrintOriginalEngine = function()
   local VREC = TweakDB:GetRecord(DS.input)
   local VType = GetType(VREC)
   if VType == '' then print("Invalid Vehicle Type") return end
+  local DModel = GetDModel(VREC, VType)
+  if DModel==nil then print("Invalid Vehicle DriveModel") return end
   local EID = ID(GetEngine(VREC))
   local Engine = TweakDB:GetRecord(MD.Originals.Engines[EID])
   if Engine==nil then print("Invalid Vehicle Engine") return end
-  print(VType .. ' - ' .. ID(Engine) .. ' - ' .. GetFinalGear(Engine).id)
+  print(TL.Lay(GetDModelTable(DModel)))
+  print(VType .. ' - ' .. ID(Engine) .. ' - ' .. Engine:EngineMaxTorque())
+  print(GetFinalGear(Engine).id)
   PrintGearTable(GetGearTable(Engine))
 end
 
