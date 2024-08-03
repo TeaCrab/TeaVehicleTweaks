@@ -118,7 +118,7 @@ end
 GetGearTable = function(Engine)
   local Out = {smin={}, smax={}, rmin={}, rmax={}, tmul= {}}
   local Gears = Engine:Gears()
-  if not Gears then Out = nil goto SKIP end
+  if Gears==nil then return nil end
   for _, Gear in ipairs(Gears) do
     table.insert(Out.smin, Gear:MinSpeed())
     table.insert(Out.smax, Gear:MaxSpeed())
@@ -183,7 +183,7 @@ Func.Restore = function()
     else print('\t' .. TL.Lay({i, VID .. ': ' .. VType}))
     end
     local Engine = GetEngine(VREC)
-    if not Engine then print(VID .. " - Vehicle Engine not Found!") goto SKIP end
+    if Engine==nil then print(VID .. " - Vehicle Engine not Found!") goto SKIP end
     local EID = ID(Engine)
     local _Engine
     Path = EID .. '.vehEngineData'
@@ -214,9 +214,9 @@ Func.Process = function()
     end
     local Engine = GetEngine(VREC)
     local _Engine
-    if not Engine then print(VID .. " - Vehicle Engine not Found!") goto SKIP end
+    if Engine==nil then print(VID .. " - Vehicle Engine not Found!") goto SKIP end
     local OrigGears = GetGearTable(Engine)
-    if not OrigGears then print(VID .. " - Engine Gears not Found!") goto SKIP end
+    if OrigGears==nil then print(VID .. " - Engine Gears not Found!") goto SKIP end
     local EID = ID(Engine)
     if MD.Processed.Engines[EID]==nil then
       _Engine = CloneEngine(VREC)
