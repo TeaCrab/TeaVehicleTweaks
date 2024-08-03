@@ -29,7 +29,7 @@ Math.ModSMAX = function(Orig, Mod)
   return Out
 end
 
--- Rules for modifying MaxEngineRPM of gears
+-- Rules for modifying MinEngineRPM of gears
 Math.ModRMIN = function(Orig, Calc, Mod)
   local Out = {}
   local rmin_o = Mod.offset.rmin

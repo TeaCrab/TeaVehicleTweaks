@@ -173,6 +173,7 @@ Func.Restore = function()
   DS.count = 0
   local VREC_TABLE = TweakDB:GetRecords('gamedataVehicle_Record')
   for i, VREC in ipairs(VREC_TABLE) do
+    DS.last_record = i
     local VID = ID(VREC)
     local VType = GetType(VREC)
     if Func.Filter(i, VID, VType) then goto SKIP
@@ -201,6 +202,7 @@ Func.Process = function()
   local VREC_TABLE = TweakDB:GetRecords('gamedataVehicle_Record')
   print("TeaTweaks...")
   for i, VREC in ipairs(VREC_TABLE) do
+    DS.last_record = i
     local VID = ID(VREC)
     local VType = GetType(VREC)
     if Func.Filter(i, VID, VType) then goto SKIP

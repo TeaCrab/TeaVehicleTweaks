@@ -72,11 +72,13 @@ local function DrawButtons()
       if ImGui.Button('Process Vehicle Records') then
         DS.status = FN.Process()==65535
         DS.applied = DS.status
+        DS.status = false
       end
     else
       if ImGui.Button('Restore Vanilla Records') then
         DS.status = FN.Restore()==-65535
         DS.applied = not DS.status
+        DS.status = false
       end
     end
 
@@ -84,6 +86,7 @@ local function DrawButtons()
     if ImGui.Button('Print Vehicle Type') then FN.PrintVType() end
     if ImGui.Button('Print Engine') then FN.PrintEngine() end
     if ImGui.Button('Print Gears') then FN.PrintGears() end
+    ImGui.Text(DS.last_record)
 
     ImGui.End()
   end
@@ -102,7 +105,11 @@ end)
 
 registerForEvent("onInit", function()
   LoadWindowState()
-  if DS.apply_on_init then FN.Process() end
+  if DS.apply_on_init then
+    DS.status = FN.Process()==65535
+    DS.applied = DS.status
+    DS.status = false
+  end
 end)
 
 registerForEvent('onOverlayOpen', function()

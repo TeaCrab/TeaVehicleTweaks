@@ -1,7 +1,8 @@
 local DebugSettings = {
-  apply_on_init = false,
+  apply_on_init = true,
   applied = false,
   status = false,
+  last_record = 0,
   debug = 0,
   use_filter = false,
   filter = 'kusanagi',
