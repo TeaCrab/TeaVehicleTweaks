@@ -1,0 +1,13 @@
+{
+    "Lua.diagnostics.globals": [
+        "TweakDB",
+        "ImGui",
+        "ImGuiCol",
+        "ImGuiCond",
+        "registerForEvent",
+        "GetMod",
+        "Dump",
+        "GameDump",
+        "json",
+    ]
+}
