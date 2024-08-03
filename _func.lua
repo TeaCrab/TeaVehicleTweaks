@@ -2,6 +2,7 @@ local DS = require('_debug')
 local MM = require('_math')
 local MD = require('_moddata')
 local TL = require('_tealib')
+local UD = require('_userdata')
 
 ID = function(record)
   if record~=nil then
@@ -36,12 +37,12 @@ CloneEngine = function(vrec)
   local EID = ID(Engine)
   local _EID = TL.SubSub(EID, MD.EngineRename)
   -- Cloning Errors
-  if not TweakDB:CloneRecord(_EID, Engine:GetID()) and DS.debug>1 then
+  if not TweakDB:CloneRecord(_EID, Engine:GetID()) and DS.debug>2 then
     print("Wrn.NewEngine() - TweakDB:CloneRecord()")
   end
   MD.Processed.Engines[EID] = _EID
   MD.Originals.Engines[_EID] = EID
-  if DS.debug>0 then print(EID .. ' => ' .. _EID) end
+  if DS.debug>1 then print(EID .. ' => ' .. _EID) end
   return TweakDB:GetRecord(_EID)
 end
 
@@ -50,7 +51,7 @@ SetEngine = function(vrec, NewEngine)
   local VID = ID(vrec)
   local _EID = ID(NewEngine)
   local Path = VID .. ".vehEngineData"
-  if DS.debug>2 then print(Path .. ' = ' .. _EID) end
+  if DS.debug>3 then print(Path .. ' = ' .. _EID) end
   return TweakDB:SetFlat(Path, NewEngine:GetID())
 end
 
@@ -64,11 +65,11 @@ CloneGearsFlat = function(Engine)
     Error = not TweakDB:CloneRecord(_GID, Gear:GetID()) or Error
     MD.Processed.Gears[GID] =_GID
     MD.Originals.Gears[_GID] = GID
-    if DS.debug>3 then print(GID .. ' => ' .. _GID) end
+    if DS.debug>4 then print(GID .. ' => ' .. _GID) end
     table.insert(Out, _GID)
   end
   -- Cloning Errors
-  if Error and DS.debug>1 then
+  if Error and DS.debug>2 then
     print("Wrn.NewGearsFlat() - TweakDB:CloneRecord()")
   end
   return Out
@@ -79,7 +80,7 @@ SetGearsFlat = function(Engine, GearTable)
   local FGID = ''
   local Path = EID .. '.gears'
   for _, v in ipairs(GearTable) do FGID = v end
-  if DS.debug>0 then print(Path .. ' = ...' .. FGID) end
+  if DS.debug>1 then print(Path .. ' = ...' .. FGID) end
   return TweakDB:SetFlat(Path, GearTable)
 end
 
@@ -104,7 +105,7 @@ SetGearsProp = function(Engine, CalcGears)
       GID .. '.torqueMultiplier', CalcGears.tmul[i]) then goto ERRORS end
     end
   end
-  if DS.debug>0 then print("Gears Modifications Applied") end
+  if DS.debug>1 then print("Gears Modifications Applied") end
   goto SKIPERROR
   ::ERRORS::
   print("Err.SetGearsProp()." .. Err .. " - " .. GID .. " - Failed")
@@ -112,13 +113,23 @@ SetGearsProp = function(Engine, CalcGears)
 end
 
 GetFinalGear = function(Engine)
-  FG = 0 for i, _ in ipairs(Engine:Gears()) do FG = i-1 end return FG
+  local FG = {n=0, id=''}
+  for i, Gear in ipairs(Engine:Gears()) do FG.n = i-1 FG.id = ID(Gear) end
+  return FG
+end
+
+GetModTable = function(VID, VType, Engine)
+  if MD.Unique[VID]~=nil then
+    return MD.Unique[VID]
+  else
+    return MD.ModTable[VType][GetFinalGear(Engine).n]
+  end
 end
 
 GetGearTable = function(Engine)
   local Out = {smin={}, smax={}, rmin={}, rmax={}, tmul= {}}
   local Gears = Engine:Gears()
-  if Gears==nil then return nil end
+  if Gears==nil then return Out end
   for _, Gear in ipairs(Gears) do
     table.insert(Out.smin, Gear:MinSpeed())
     table.insert(Out.smax, Gear:MaxSpeed())
@@ -142,7 +153,7 @@ local Func = {
 }
 
 Func.Filter = function(i, VID, VType)
-  if DS.debug>0 then
+  if DS.debug>1 then
     if DS.use_filter then
       DS.count = DS.count + 1
       return not string.match(VID, DS.filter) or DS.count>DS.range
@@ -157,22 +168,60 @@ Func.Filter = function(i, VID, VType)
   else return true end
 end
 
-Func.PrintVType = function()
-  local VREC = TweakDB:GetRecord(DS.input)
-  print(GetType(VREC))
+Func.PlayerInVehicle = function()
+  local Player = Game.GetPlayer()
+  local WS = Game.GetWorkspotSystem()
+  if WS then
+    return Player and WS:IsActorInWorkspot(Player)
+      and WS:GetExtendedInfo(Player).isActive
+      and Func.GetCurrentVehicle()~=nil
+  end
 end
 
-Func.PrintEngine = function()
-  local VREC = TweakDB:GetRecord(DS.input)
-  print(ID(GetEngine(VREC)))
+Func.GetCurrentVehicle = function()
+  return Game['GetMountedVehicle;GameObject'](Game.GetPlayer())
 end
 
-Func.PrintGears = function()
+Func.PrintCurrentEngine = function()
   local VREC = TweakDB:GetRecord(DS.input)
-  PrintGearTable(GetGearTable(GetEngine(VREC)))
+  local VType = GetType(VREC)
+  if VType == '' then print("Invalid Vehicle Type") return end
+  local Engine = GetEngine(VREC)
+  if Engine==nil then print("Invalid Vehicle Engine") return end
+  print(VType .. ' - ' .. ID(Engine) .. ' - ' .. Engine:EngineMaxTorque())
+  print(GetFinalGear(Engine).id)
+  PrintGearTable(GetGearTable(Engine))
+end
+
+Func.PrintOriginalEngine = function()
+  local VREC = TweakDB:GetRecord(DS.input)
+  local VType = GetType(VREC)
+  if VType == '' then print("Invalid Vehicle Type") return end
+  local EID = ID(GetEngine(VREC))
+  local Engine = TweakDB:GetRecord(MD.Originals.Engines[EID])
+  if Engine==nil then print("Invalid Vehicle Engine") return end
+  print(VType .. ' - ' .. ID(Engine) .. ' - ' .. GetFinalGear(Engine).id)
+  PrintGearTable(GetGearTable(Engine))
+end
+
+Func.BuildUserData = function()
+  print("TeaVehicleTweaks Reading User Data...")
+  local VREC_TABLE = TweakDB:GetRecords('gamedataVehicle_Record')
+  for _, VREC in ipairs(VREC_TABLE) do
+    local VID = ID(VREC)
+    for k, unique_modtable in pairs(UD) do
+      if string.match(VID, k) then
+        MD.Unique[VID] = unique_modtable
+      end
+    end
+  end
+  print("TeaVehicleTweaks - User Data Complete")
+  -- Crude indication of all user data has being read without major error.
+  return 32767
 end
 
 Func.Restore = function()
+  print("TeaVehicleTweaks Restoring...")
   DS.count = 0
   local VREC_TABLE = TweakDB:GetRecords('gamedataVehicle_Record')
   for i, VREC in ipairs(VREC_TABLE) do
@@ -180,7 +229,7 @@ Func.Restore = function()
     local VID = ID(VREC)
     local VType = GetType(VREC)
     if Func.Filter(i, VID, VType) then goto SKIP
-    else print('\t' .. TL.Lay({i, VID .. ': ' .. VType}))
+    elseif DS.debug>0 then print('\t' .. TL.Lay({i, VID .. ': ' .. VType}))
     end
     local Engine = GetEngine(VREC)
     if Engine==nil then print(VID .. " - Vehicle Engine not Found!") goto SKIP end
@@ -194,9 +243,10 @@ Func.Restore = function()
       end
     end
     _Engine = GetEngine(VREC)
-    if DS.debug>0 then PrintGearTable(GetGearTable(_Engine)) end
+    if DS.debug>1 then PrintGearTable(GetGearTable(_Engine)) end
     ::SKIP::
   end
+  print("TeaVehicleTweaks - Restoration Complete")
   -- Crude indication of all restoration has finished without major error.
   return -65535
 end
@@ -204,13 +254,13 @@ end
 Func.Process = function()
   DS.count = 0
   local VREC_TABLE = TweakDB:GetRecords('gamedataVehicle_Record')
-  print("TeaTweaks...")
+  print("TeaVehicleTweaks Processing...")
   for i, VREC in ipairs(VREC_TABLE) do
     DS.last_record = i
     local VID = ID(VREC)
     local VType = GetType(VREC)
     if Func.Filter(i, VID, VType) then goto SKIP
-    else print('\t' .. TL.Lay({i, VID .. ': ' .. VType}))
+    elseif DS.debug>0 then print('\t' .. TL.Lay({i, VID .. ': ' .. VType}))
     end
     local Engine = GetEngine(VREC)
     local _Engine
@@ -227,7 +277,7 @@ Func.Process = function()
         print("Error.SetGearsFlat() - " .. ID(_Engine) .. " Failed") goto SKIP
       end
       local CalcGears = {}
-      ModTable = MD.ModTable[VType][GetFinalGear(Engine)]
+      ModTable = GetModTable(VID, VType, Engine)
       CalcGears.smax = MM.ModSMAX(OrigGears, ModTable)
       CalcGears.smin = MM.ModSMIN(CalcGears, ModTable)
       CalcGears.rmax = MM.ModRMAX(OrigGears, ModTable)
@@ -237,14 +287,15 @@ Func.Process = function()
       SetGearsProp(_Engine, CalcGears)
     else
       _Engine = TweakDB:GetRecord(MD.Processed.Engines[EID])
-      if DS.debug>0 then print(EID .. ': ' .. ID(_Engine)) end
+      if DS.debug>1 then print(EID .. ': ' .. ID(_Engine)) end
       SetEngine(VREC, _Engine)
     end
     TweakDB:Update(VREC)
-    if DS.debug>0 then PrintGearTable(GetGearTable(_Engine)) end
+    if DS.debug>1 then PrintGearTable(GetGearTable(_Engine)) end
     ::SKIP::
   end
   -- Crude indication of all processing has finished without major error.
+  print("TeaVehicleTweaks - Processing Complete")
   return 65535
 end
 

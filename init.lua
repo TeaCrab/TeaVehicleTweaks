@@ -60,14 +60,8 @@ local function DrawButtons()
   UL.ImGui_Init()
   if ImGui.Begin('TeaTweaks', true) then
 
-    DS.debug = ImGui.SliderInt('Debug', DS.debug, 0, 5)
+    DS.debug = ImGui.SliderInt('Debug Level', DS.debug, 0, 5)
     DS.apply_on_init = ImGui.Checkbox('Apply on Game Start', DS.apply_on_init)
-    DS.use_filter = ImGui.Checkbox('Filter', DS.use_filter)
-    if DS.use_filter then
-      DS.filter = ImGui.InputText("", DS.filter, 256)
-    end
-    DS.index = ImGui.SliderInt('Index', DS.index, 1, 3000)
-    DS.range = ImGui.SliderInt('Range', DS.range, 0, 3000)
     if not DS.applied then
       if ImGui.Button('Process Vehicle Records') then
         DS.status = FN.Process()==65535
@@ -81,15 +75,29 @@ local function DrawButtons()
         DS.status = false
       end
     end
-
-    DS.input = ImGui.InputText("Input", DS.input, 512)
-    if ImGui.Button('Print Vehicle Type') then FN.PrintVType() end
-    if ImGui.Button('Print Engine') then FN.PrintEngine() end
-    if ImGui.Button('Print Gears') then FN.PrintGears() end
-    ImGui.Text(DS.last_record)
-
-    ImGui.End()
+    if DS.debug>0 then
+      DS.use_filter = ImGui.Checkbox('Filter', DS.use_filter)
+      if DS.use_filter then
+        DS.filter = ImGui.InputText("", DS.filter, 256)
+      end
+      ImGui.Text("Last Processed Index: " .. tostring(DS.last_record))
+      DS.index = ImGui.SliderInt('Index', DS.index, 1, 3000)
+      DS.range = ImGui.SliderInt('Range', DS.range, 0, 3000)
+    end
+    if FN.PlayerInVehicle() then
+      if ImGui.Button('Get Current Vehicle ID') then
+        local idvalue = FN.GetCurrentVehicle():GetRecord():GetID().value
+        if idvalue~=DS.last_vehicle_id and idvalue~=DS.input then
+          DS.last_vehicle_id = DS.input
+          DS.input = idvalue
+        end
+      end
+    end
+    DS.input = ImGui.InputText("", DS.input, 512)
+    if ImGui.Button('Print Current Engine') then FN.PrintCurrentEngine() end
+    if ImGui.Button('Print Original Engine') then FN.PrintOriginalEngine() end
   end
+  ImGui.End()
 end
 
 registerForEvent('onDraw', function()
@@ -104,8 +112,9 @@ registerForEvent('onDraw', function()
 end)
 
 registerForEvent("onInit", function()
+  DS.status = FN.BuildUserData()==32767
   LoadWindowState()
-  if DS.apply_on_init then
+  if DS.apply_on_init and DS.status then
     DS.status = FN.Process()==65535
     DS.applied = DS.status
     DS.status = false

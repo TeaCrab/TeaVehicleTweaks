@@ -3,11 +3,11 @@ local TeaLib = {}
 TeaLib.Lay = function(t, sep)
   sep = sep or '\t'
   local _t= {}
-  for _, value in ipairs(t) do
-    if type(value)=='number' then
-      _t[#_t+1] = tostring(TeaLib.Fp2(value))
+  for _, v in ipairs(t) do
+    if type(v)=='number' then
+      _t[#_t+1] = tostring(TeaLib.Fp2(v))
     else
-      _t[#_t+1] = tostring(value)
+      _t[#_t+1] = tostring(v)
     end
   end
   return table.concat(_t, sep)
@@ -30,22 +30,22 @@ TeaLib.Fp2 = function(n) return TeaLib.Rnd(n, 2) end
 TeaLib.Fp3 = function(n) return TeaLib.Rnd(n, 3) end
 
 TeaLib.SubSub = function(s, patterns)
-  local out = s
+  local Out = s
   for k, v in pairs(patterns) do
-    out = string.gsub(out, k, v)
+    Out = string.gsub(Out, k, v)
   end
-  return out
-end
-
-TeaLib.Test = function()
-  print("__TEST__TEST__TEST__")
+  return Out
 end
 
 TeaLib.TPrint = function(t, i)
   local count = 0
   i = i or 0
   for k, v in pairs(t) do
-    print(tostring(k) .. ": " .. tostring(v))
+    if type(v)=='number' then
+      print(tostring(k) .. ": " .. TeaLib.Fp2(v))
+    else
+      print(tostring(k) .. ": " .. tostring(v))
+    end
     count = count + 1
     if i ~= 0 and count >= i then break end
   end
@@ -56,6 +56,10 @@ TeaLib.TClear = function(t)
   for k, _ in pairs(t) do
     t[k] = nil
   end
+end
+
+TeaLib.Test = function()
+  print("__TEST__TEST__TEST__")
 end
 
 return TeaLib

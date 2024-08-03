@@ -3,6 +3,7 @@ local DebugSettings = {
   applied = false,
   status = false,
   last_record = 0,
+  last_vehicle_id = '',
   debug = 0,
   use_filter = false,
   filter = 'kusanagi',

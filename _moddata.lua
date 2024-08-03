@@ -29,6 +29,10 @@ ModData.Processed = {
   DModels = {},
 }
 
+-- Stores a list of dynamically compiled vehicle records
+-- to be ignored or receive unique tuning
+ModData.Unique = {}
+
 ModData.ModTable = {
   ['Bike'] = {
     [5] = MT.BikeGear5,
