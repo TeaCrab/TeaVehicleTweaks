@@ -117,22 +117,25 @@ end
 
 GetGearTable = function(Engine)
   local Out = {smin={}, smax={}, rmin={}, rmax={}, tmul= {}}
-  for _, Gear in ipairs(Engine:Gears()) do
+  local Gears = Engine:Gears()
+  if not Gears then Out = nil goto SKIP end
+  for _, Gear in ipairs(Gears) do
     table.insert(Out.smin, Gear:MinSpeed())
     table.insert(Out.smax, Gear:MaxSpeed())
     table.insert(Out.rmin, Gear:MinEngineRPM())
     table.insert(Out.rmax, Gear:MaxEngineRPM())
     table.insert(Out.tmul, Gear:TorqueMultiplier())
   end
+  ::SKIP::
   return Out
 end
 
 PrintGearTable = function(GearTable)
-  if GearTable.smin then print(".minSpeed: " .. TL.Lay(GearTable.smin)) end
-  if GearTable.smax then print(".maxSpeed: " .. TL.Lay(GearTable.smax)) end
-  if GearTable.rmin then print(".minEngineRPM: " .. TL.Lay(GearTable.rmin)) end
-  if GearTable.rmax then print(".maxEngineRPM: " .. TL.Lay(GearTable.rmax)) end
-  if GearTable.tmul then print(".maxTorqueMultiplier: " .. TL.Lay(GearTable.tmul)) end
+  if GearTable.smin then print("SpdMin: " .. TL.Lay(GearTable.smin)) end
+  if GearTable.smax then print("SpdMax: " .. TL.Lay(GearTable.smax)) end
+  if GearTable.rmin then print("RpmMin: " .. TL.Lay(GearTable.rmin)) end
+  if GearTable.rmax then print("RpmMax: " .. TL.Lay(GearTable.rmax)) end
+  if GearTable.tmul then print("TrqMul: " .. TL.Lay(GearTable.tmul)) end
 end
 
 local Func = {
@@ -180,7 +183,7 @@ Func.Restore = function()
     else print('\t' .. TL.Lay({i, VID .. ': ' .. VType}))
     end
     local Engine = GetEngine(VREC)
-    if not Engine then goto SKIP end
+    if not Engine then print(VID .. " - Vehicle Engine not Found!") goto SKIP end
     local EID = ID(Engine)
     local _Engine
     Path = EID .. '.vehEngineData'
@@ -194,6 +197,7 @@ Func.Restore = function()
     if DS.debug>0 then PrintGearTable(GetGearTable(_Engine)) end
     ::SKIP::
   end
+  -- Crude indication of all restoration has finished without major error.
   return -65535
 end
 
@@ -209,21 +213,18 @@ Func.Process = function()
     else print('\t' .. TL.Lay({i, VID .. ': ' .. VType}))
     end
     local Engine = GetEngine(VREC)
-    if not Engine then goto SKIP end
-    local EID = ID(Engine)
     local _Engine
-    local _GearsFlat
+    if not Engine then print(VID .. " - Vehicle Engine not Found!") goto SKIP end
+    local OrigGears = GetGearTable(Engine)
+    if not OrigGears then print(VID .. " - Engine Gears not Found!") goto SKIP end
+    local EID = ID(Engine)
     if MD.Processed.Engines[EID]==nil then
       _Engine = CloneEngine(VREC)
       if not SetEngine(VREC, _Engine) then
-        print("Error.SetEngine() - " .. ID(_Engine) .. " Failed")
-        goto SKIP
+        print("Error.SetEngine() - " .. ID(_Engine) .. " Failed") goto SKIP
       end
-      local OrigGears = GetGearTable(Engine)
-      _GearsFlat = CloneGearsFlat(Engine)
-      if not SetGearsFlat(_Engine, _GearsFlat) then
-        print("Error.SetGearsFlat() - " .. ID(_Engine) .. " Failed")
-        goto SKIP
+      if not SetGearsFlat(_Engine, CloneGearsFlat(Engine)) then
+        print("Error.SetGearsFlat() - " .. ID(_Engine) .. " Failed") goto SKIP
       end
       local CalcGears = {}
       ModTable = MD.ModTable[VType][GetFinalGear(Engine)]
@@ -243,11 +244,7 @@ Func.Process = function()
     if DS.debug>0 then PrintGearTable(GetGearTable(_Engine)) end
     ::SKIP::
   end
-
-  for _, vrec in ipairs(VREC_TABLE) do
-    TweakDB:Update(vrec)
-  end
-  ::ENDSCRIPT::
+  -- Crude indication of all processing has finished without major error.
   return 65535
 end
 

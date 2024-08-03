@@ -9,7 +9,6 @@ ModTable.BikeGear5 = {
     rmin = {    0,    0,    0,    0,    0,    0},
     rmax = {    0,    0,    0,    0,    0,    0},
     tmul = {    0,    0,    0, 0.01, 0.01, 0.02},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
   multiplier = {
   -- Gears      R   1st   2nd   3rd   4th   5th   6th   7th
@@ -18,7 +17,6 @@ ModTable.BikeGear5 = {
     rmin = {  1.0,  1.0, 0.85, 0.81, 0.77, 0.73},
     rmax = {  1.0,  1.0,  1.0,  1.0,  1.0,  1.0},
     tmul = {  1.0,  1.0,  1.0,  1.1, 1.25, 1.55},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
 }
 
@@ -30,7 +28,6 @@ ModTable.BikeGear6 = {
     rmin = {    0,    0,    0,    0,    0,    0,    0},
     rmax = {    0,    0,    0,    0,    0,    0,    0},
     tmul = {    0,    0,    0, 0.01, 0.01, 0.02, 0.03},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
   multiplier = {
   -- Gears      R   1st   2nd   3rd   4th   5th   6th   7th
@@ -39,7 +36,6 @@ ModTable.BikeGear6 = {
     rmin = {  1.0,  1.0, 0.86, 0.83, 0.80, 0.77, 0.74},
     rmax = {  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0},
     tmul = {  1.0,  1.0,  1.0,  1.1, 1.22, 1.33, 1.55},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
 }
 
@@ -51,7 +47,6 @@ ModTable.BikeGear7 = {
     rmin = {    0,    0,    0,    0,    0,    0,    0,    0},
     rmax = {    0,    0,    0,    0,    0,    0,    0,    0},
     tmul = {    0,    0,    0, 0.01, 0.01, 0.02, 0.03, 0.05},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
   multiplier = {
   -- Gears      R   1st   2nd   3rd   4th   5th   6th   7th
@@ -60,7 +55,6 @@ ModTable.BikeGear7 = {
     rmin = {  1.0,  1.0, 0.83, 0.81, 0.79, 0.77, 0.75, 0.73},
     rmax = {  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0},
     tmul = {  1.0,  1.0,  1.0,  1.1,  1.1,  1.2,  1.3, 1.55},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
 }
 
@@ -72,7 +66,6 @@ ModTable.CarGear5 = {
     rmin = {    0,    0,    0,    0,    0,    0},
     rmax = {    0,    0,    0,    0,    0,    0},
     tmul = {    0,    0,    0, 0.01, 0.01, 0.02},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
   multiplier = {
   -- Gears      R   1st   2nd   3rd   4th   5th
@@ -81,7 +74,6 @@ ModTable.CarGear5 = {
     rmin = {  1.0,  1.0, 0.85, 0.81, 0.77, 0.73},
     rmax = {  1.0,  1.0,  1.0,  1.0,  1.0,  1.0},
     tmul = {  1.0,  1.0,  1.0, 1.15, 1.35, 1.55},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
 }
 
@@ -93,7 +85,6 @@ ModTable.CarGear6 = {
     rmin = {    0,    0,    0,    0,    0,    0,    0},
     rmax = {    0,    0,    0,    0,    0,    0,    0},
     tmul = {    0,    0,    0, 0.01, 0.01, 0.02, 0.03},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
   multiplier = {
   -- Gears      R   1st   2nd   3rd   4th   5th   6th
@@ -102,7 +93,6 @@ ModTable.CarGear6 = {
     rmin = {  1.0,  1.0, 0.84, 0.80, 0.77, 0.75, 0.74},
     rmax = {  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0},
     tmul = {  1.0,  1.0,  1.0,  1.1, 1.21, 1.33,  1.5},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
 }
 
@@ -114,7 +104,6 @@ ModTable.CarGear7 = {
     rmin = {    0,    0,    0,    0,    0,    0,    0,    0},
     rmax = {    0,    0,    0,    0,    0,    0,    0,    0},
     tmul = {    0,    0,    0, 0.01, 0.01, 0.02, 0.03, 0.05},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
   multiplier = {
   -- Gears      R   1st   2nd   3rd   4th   5th   6th   7th
@@ -123,7 +112,6 @@ ModTable.CarGear7 = {
     rmin = {  1.0,  1.0, 0.87, 0.81, 0.77, 0.74, 0.72, 0.71},
     rmax = {  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0},
     tmul = {  1.0,  1.0,  1.0,  1.1,  1.1,  1.2,  1.3,  1.5},
-    -- Index 0 are for calculations only, modification parameter starts at index 1
   },
 }
 
