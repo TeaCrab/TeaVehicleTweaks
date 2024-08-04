@@ -1,3 +1,4 @@
+local DS = require('_debug')
 local TeaLib = {}
 
 TeaLib.Lay = function(t, sep)
@@ -11,6 +12,20 @@ TeaLib.Lay = function(t, sep)
     end
   end
   return table.concat(_t, sep)
+end
+
+TeaLib.Dbg = function(debug_level, object)
+  if object~=nil and DS.debug>=debug_level then print(object)
+  else return DS.debug>=debug_level
+  end
+end
+
+TeaLib.VecStr = function(vec)
+  local Out = {}
+  if vec.x then table.insert(Out, 'x ' .. TeaLib.Fp2(vec.x)) end
+  if vec.y then table.insert(Out, 'y ' .. TeaLib.Fp2(vec.y)) end
+  if vec.z then table.insert(Out, 'z ' .. TeaLib.Fp2(vec.z)) end
+  return TeaLib.Lay(Out, ', ')
 end
 
 TeaLib.Try = function(object, default)

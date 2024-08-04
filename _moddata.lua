@@ -30,8 +30,19 @@ ModData.Processed = {
 }
 
 -- Stores a list of dynamically compiled vehicle records
--- to be ignored or receive unique tuning
+-- to be ignored or to receive unique tuning
 ModData.Unique = {}
+
+-- These are patterns matching the game's "Fake" vehicle records
+-- they are not drivable, and lacks the components for the mod to process them
+ModData.Banned = {
+    "Vehicle%.av_",
+    "Vehicle%.s?q%d*.*_av",
+    "Vehicle%.s?q%d*.*_crane",
+    "Vehicle%.s?q%d*.*_drone",
+    "Vehicle%.s?q%d*.*_train",
+    "Vehicle%.s?q%d*.*_train_car.*",
+}
 
 ModData.ModTable = {
   ['Bike'] = {
