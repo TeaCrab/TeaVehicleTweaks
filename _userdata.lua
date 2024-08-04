@@ -1,9 +1,9 @@
 local MD = require('_modtable')
-local UD = {}
+local UserData = {}
 -- Add unique Gear Tweak table here
 -- MD.Dummy = mod default/vanilla gearbox tuning
-UD["Vehicle.mazda_rx7"] = MD.Dummy
-UD['Vehicle.v_arch_v4paladin'] = {
+UserData["Vehicle.mazda_rx7"] = MD.Dummy
+UserData['Vehicle.v_arch_v4paladin'] = {
   offset = {
     -- Gears    R   1st   2nd   3rd   4th   5th   6th   7th
     smin = {    0,    0,  4.5,  3.9,  3.3,  2.7,  2.1,  1.5},
@@ -22,4 +22,4 @@ UD['Vehicle.v_arch_v4paladin'] = {
   },
 }
 
-return UD
+return UserData
