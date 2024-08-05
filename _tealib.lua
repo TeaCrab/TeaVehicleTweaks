@@ -15,9 +15,8 @@ TeaLib.Lay = function(t, sep)
 end
 
 TeaLib.Dbg = function(debug_level, object)
-  if object~=nil and DS.debug>=debug_level then print(object)
-  else return DS.debug>=debug_level
-  end
+  if object~=nil and DS.debug>=debug_level then print(object) end
+  return DS.debug>=debug_level
 end
 
 TeaLib.VecStr = function(vec)

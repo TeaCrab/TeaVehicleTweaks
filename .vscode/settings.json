@@ -10,5 +10,7 @@
         "GameDump",
         "Game",
         "json",
+        "Vector2",
+        "Vector3",
     ]
 }

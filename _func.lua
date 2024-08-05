@@ -45,6 +45,7 @@ GetDModelTable = function(DModel)
     bfric = DModel:BodyFriction(),
     cmass = DModel:Chassis_mass(),
     tmass = DModel:Total_mass(),
+    wrsis = DModel:WheelResist(),
     comos = DModel:Center_of_mass_offset(),
   }
 end
@@ -166,7 +167,7 @@ SetGearsProp = function(Engine, CalcGears)
       GID .. '.torqueMultiplier', CalcGears.tmul[i]) then goto ERRORS end
     end
   end
-  TL.Dbg(2, "Gears Modifications Applied")
+  TL.Dbg(5, "Gears Modifications Applied")
   goto SKIPERROR
   ::ERRORS::
   print("Err.SetGearsProp()." .. Err .. " - " .. GID .. " - Failed")
@@ -175,6 +176,10 @@ end
 
 local Func = {
 }
+
+Func.GetCurrentDirectory = function()
+  return io.popen"cd":read'*l'
+end
 
 Func.PlayerInVehicle = function()
   local Player = Game.GetPlayer()
