@@ -1,6 +1,18 @@
 local DS = require('_debug')
 local TeaLib = {}
 
+TeaLib.Ind = function(i)
+  return '[' .. i .. ']'
+end
+
+TeaLib.Inf = function(s)
+  return '<' .. s .. '>'
+end
+
+TeaLib.Dot = function(s)
+  return '.' .. s
+end
+
 TeaLib.Lay = function(t, sep)
   sep = sep or '\t'
   local _t= {}
@@ -24,6 +36,7 @@ TeaLib.VecStr = function(vec)
   if vec.x then table.insert(Out, 'x ' .. TeaLib.Fp2(vec.x)) end
   if vec.y then table.insert(Out, 'y ' .. TeaLib.Fp2(vec.y)) end
   if vec.z then table.insert(Out, 'z ' .. TeaLib.Fp2(vec.z)) end
+  if vec.w then table.insert(Out, 'w ' .. TeaLib.Fp2(vec.w)) end
   return TeaLib.Lay(Out, ', ')
 end
 

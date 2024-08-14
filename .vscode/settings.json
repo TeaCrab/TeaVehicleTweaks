@@ -12,5 +12,6 @@
         "json",
         "Vector2",
         "Vector3",
+        "NameToString",
     ]
 }

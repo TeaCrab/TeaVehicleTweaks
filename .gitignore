@@ -5,7 +5,8 @@
 
 *.go
 *.lnk
-__DEV/
+__DEV
+_modtable_v1.lua
 # User-specific files
 *.rsuser
 *.suo
@@ -399,5 +400,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-__DEV
-_modtable_v1.lua

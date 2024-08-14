@@ -9,7 +9,7 @@ Math.ModSMIN = function(Calc, Mod)
     if k<=1 then -- Reverse and 1st Gear
       table.insert(Out, 0.0)
     else
-      table.insert(Out, Calc.smax[k] - smin_o[i] * i * 0.175 * smin_m[i])
+      table.insert(Out, Calc.smax[k] - smin_o[i] * 0.175 * smin_m[i])
     end
   end
   return Out
@@ -24,7 +24,7 @@ Math.ModSMAX = function(Orig, Mod)
     if k==0 then -- Reverse Gear
       table.insert(Out, smax_o[i] + v * smax_m[i])
     else
-      table.insert(Out, smax_o[i] * i + v * smax_m[i])
+      table.insert(Out, smax_o[i] + v * smax_m[i])
     end
   end
   return Out

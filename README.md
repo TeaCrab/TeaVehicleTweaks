@@ -9,7 +9,7 @@ Information are printed into the console with the increase of Debug-Level intege
 ![CET_ConsolePrints](https://github.com/user-attachments/assets/a8026fa0-34c2-4744-b6aa-c2d054c5968b)
 
 The vehicle gear tuning parameter details can be found in:
-* `_modtable.lua` - Global tuning profile for all vanilla vehicles & engines.
-* `_userdata.lua` - For targeted vehicle tuning or to be used to prevent global tuning profile from touching them.
+* `__moddata.lua` - Global tuning profile for all vehicles & engines.
+* `__userdata.lua` - For targeted vehicles or to be used to prevent application of global profile.
 
 [Video Demo on Youtube](https://www.youtube.com/watch?v=fTqzP4ge4LQ)
